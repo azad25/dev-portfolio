@@ -1,12 +1,15 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useHasMounted } from '@/hooks/useHasMounted'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { NAV_LINKS, SITE } from '@/lib/constants'
+import { EASE_OUT } from '@/lib/motion'
 import Button from '@/components/ui/Button'
 
 export default function Navbar() {
+  const mounted = useHasMounted()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
@@ -41,9 +44,9 @@ export default function Navbar() {
   return (
     <>
       <motion.header
-        initial={{ y: -80, opacity: 0 }}
+        initial={mounted ? { y: -80, opacity: 0 } : false}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.6, ease: EASE_OUT }}
         className={cn(
           'fixed top-0 z-50 w-full transition-all duration-300',
           scrolled

@@ -5,12 +5,28 @@ import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import { SITE } from '@/lib/constants'
 import { EASE_OUT } from '@/lib/motion'
-import { orbitingTechs } from '@/data/skills'
+import { useHasMounted } from '@/hooks/useHasMounted'
+
+const orbitingTechs = [
+  { label: 'React',   startAngle:   0, radius: 130, duration: 10, ccw: false, color: 'violet'  },
+  { label: 'Go',      startAngle:  72, radius: 130, duration: 14, ccw: true,  color: 'mint'    },
+  { label: 'Python',  startAngle: 144, radius: 130, duration: 11, ccw: false, color: 'neutral' },
+  { label: 'PHP',     startAngle: 216, radius: 130, duration: 15, ccw: true,  color: 'violet'  },
+  { label: 'Node.js', startAngle: 288, radius: 130, duration: 12, ccw: false, color: 'mint'    },
+] as const
+
+const colorMap = {
+  violet:  'border-violet-500/40 bg-violet-500/10 text-violet-300',
+  mint:    'border-emerald-400/40 bg-emerald-400/10 text-emerald-400',
+  neutral: 'border-white/15 bg-white/5 text-slate-300',
+} as const
 
 export default function Hero() {
+  const mounted = useHasMounted()
+
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden px-6 pt-16">
-      {/* Background radial glows */}
+      {/* Background glows */}
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600/10 blur-[120px]" />
         <div className="absolute right-0 top-1/4 h-[400px] w-[400px] rounded-full bg-emerald-400/5 blur-[100px]" />
@@ -21,7 +37,7 @@ export default function Hero() {
         {/* Left — text */}
         <div className="flex flex-col justify-center">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={mounted ? { opacity: 0, y: 24 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0 }}
             className="mb-6"
@@ -30,7 +46,7 @@ export default function Hero() {
           </motion.div>
 
           <motion.p
-            initial={{ opacity: 0, y: 24 }}
+            initial={mounted ? { opacity: 0, y: 24 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.1 }}
             className="mb-2 text-xs font-medium tracking-[0.15em] text-slate-500"
@@ -39,7 +55,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 24 }}
+            initial={mounted ? { opacity: 0, y: 24 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.2 }}
             className="font-display mb-4 text-5xl font-bold leading-[1.05] tracking-tight text-white md:text-6xl xl:text-7xl"
@@ -51,7 +67,7 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 24 }}
+            initial={mounted ? { opacity: 0, y: 24 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.35 }}
             className="mb-8 max-w-md text-base leading-relaxed text-slate-400 md:text-lg"
@@ -61,7 +77,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={mounted ? { opacity: 0, y: 24 } : false}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.45 }}
             className="flex flex-wrap items-center gap-3"
@@ -79,9 +95,8 @@ export default function Hero() {
             </Button>
           </motion.div>
 
-          {/* Scroll indicator */}
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={mounted ? { opacity: 0 } : false}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.7 }}
             className="mt-14 hidden items-center gap-3 lg:flex"
@@ -97,64 +112,61 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Right — orbiting tech icons */}
-        <div className="flex items-center justify-center">
-          <div className="relative flex h-[340px] w-[340px] items-center justify-center md:h-[400px] md:w-[400px]">
+        {/* Right — orbiting skills */}
+        <motion.div
+          initial={mounted ? { opacity: 0, scale: 0.9 } : false}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.3 }}
+          className="flex items-center justify-center"
+        >
+          {/* Orbit stage — fixed size square, everything inside is centred */}
+          <div className="relative h-[320px] w-[320px] md:h-[380px] md:w-[380px]">
+
             {/* Glow */}
-            <div className="absolute h-48 w-48 rounded-full bg-violet-600/20 blur-3xl" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="h-40 w-40 rounded-full bg-violet-600/25 blur-3xl" />
+            </div>
 
-            {/* Orbit rings */}
-            <div className="absolute h-[260px] w-[260px] rounded-full border border-dashed border-violet-500/15" />
-            <div className="absolute h-[340px] w-[340px] rounded-full border border-dashed border-emerald-400/10" />
+            {/* Orbit ring */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="h-[266px] w-[266px] rounded-full border border-dashed border-violet-500/20 md:h-[300px] md:w-[300px]" />
+            </div>
 
-            {/* Avatar */}
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: EASE_OUT }}
-              className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-gradient-to-br from-violet-600 to-emerald-500"
-            >
-              <span className="font-display text-2xl font-bold text-white">FA</span>
-            </motion.div>
+            {/* Avatar — absolutely centred */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full border border-white/10 bg-gradient-to-br from-violet-600 to-emerald-500 shadow-[0_0_40px_rgba(139,92,246,0.35)]">
+                <span className="font-display text-xl font-bold text-white">FA</span>
+              </div>
+            </div>
 
-            {/* Orbiting badges */}
-            {orbitingTechs.map((tech, i) => {
-              const angleRad = (tech.angle * Math.PI) / 180
-              const x = Math.cos(angleRad) * tech.radius
-              const y = Math.sin(angleRad) * tech.radius
-
-              const colorMap = {
-                violet: 'border-violet-500/30 bg-violet-500/10 text-violet-300',
-                mint: 'border-emerald-400/30 bg-emerald-400/10 text-emerald-400',
-                neutral: 'border-white/10 bg-white/5 text-slate-400',
-              } as const
+            {/* Orbiting skill badges
+                Pattern: outer wrapper fills the stage and rotates.
+                Inner span is offset by radius on X, then counter-rotates
+                so the label text stays upright. */}
+            {orbitingTechs.map((tech) => {
+              const rotateFrom = tech.startAngle
+              const rotateTo   = tech.ccw ? rotateFrom - 360 : rotateFrom + 360
 
               return (
                 <motion.div
                   key={tech.label}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.5 + i * 0.08, ease: EASE_OUT }}
-                  className="absolute"
-                  style={{ transform: `translate(${x}px, ${y}px)` }}
+                  className="absolute inset-0 flex items-center justify-center"
+                  animate={{ rotate: [rotateFrom, rotateTo] }}
+                  transition={{ duration: tech.duration, repeat: Infinity, ease: 'linear' }}
                 >
-                  <motion.div
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{
-                      duration: 2.5 + i * 0.4,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                      delay: i * 0.3,
-                    }}
-                    className={`rounded-lg border px-3 py-1.5 text-xs font-medium backdrop-blur-sm ${colorMap[tech.color]}`}
+                  <motion.span
+                    style={{ x: tech.radius }}
+                    animate={{ rotate: [-rotateFrom, -rotateTo] }}
+                    transition={{ duration: tech.duration, repeat: Infinity, ease: 'linear' }}
+                    className={`inline-flex items-center rounded-lg border px-3 py-1.5 text-xs font-medium backdrop-blur-sm ${colorMap[tech.color]}`}
                   >
                     {tech.label}
-                  </motion.div>
+                  </motion.span>
                 </motion.div>
               )
             })}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )
