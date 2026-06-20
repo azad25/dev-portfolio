@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "mcp__visualize__show_widget",
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --yes)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --yes)",
+      "Bash(grep -n \"def invoke\\\\|def ainvoke\\\\|type.*tool_call\\\\|ToolMessage\\\\|tool_call_id\" /var/lib/docker/rootfs/overlayfs/4478e7ed78656084453f095b266343bc66317166de0e2ca1faeaedd6a5225eb4/usr/local/lib/python3.11/site-packages/langchain_core/tools/structured.py 2>/dev/null | head -40)",
+      "Read(//var/lib/docker/rootfs/overlayfs/4478e7ed78656084453f095b266343bc66317166de0e2ca1faeaedd6a5225eb4/usr/local/lib/python3.11/site-packages/langchain_core/tools/**)",
+      "Bash(docker exec *)",
+      "Bash(docker compose *)"
     ]
   }
 }

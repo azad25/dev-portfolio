@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { NAV_LINKS, SITE } from '@/lib/constants'
 import { EASE_OUT } from '@/lib/motion'
 import Button from '@/components/ui/Button'
+import Logo from '@/components/ui/Logo'
 
 export default function Navbar() {
   const mounted = useHasMounted()
@@ -49,35 +50,34 @@ export default function Navbar() {
         transition={{ duration: 0.6, ease: EASE_OUT }}
         className={cn(
           'fixed top-0 z-50 w-full transition-all duration-300',
-          scrolled
-            ? 'border-b border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl'
-            : 'bg-transparent'
+          scrolled ? 'border-b border-line bg-paper/85 backdrop-blur-md' : 'bg-transparent'
         )}
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <a
-            href="#"
-            className="font-display text-lg font-bold text-white"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
-            FA<span className="text-violet-500">.</span>
+          <a href="#" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <Logo />
           </a>
 
-          <nav className="hidden items-center gap-8 md:flex">
-            {NAV_LINKS.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => handleNavClick(link.href)}
-                className={cn(
-                  'text-sm transition-colors duration-200',
-                  activeSection === link.href.replace('#', '')
-                    ? 'text-white'
-                    : 'text-slate-400 hover:text-white'
-                )}
-              >
-                {link.label}
-              </button>
-            ))}
+          <nav className="hidden items-center gap-7 md:flex">
+            {NAV_LINKS.map((link, i) => {
+              const id = link.href.replace('#', '')
+              const active = activeSection === id
+              return (
+                <button
+                  key={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className={cn(
+                    'group flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.1em] transition-colors duration-200',
+                    active ? 'text-ink' : 'text-ink-faint hover:text-ink'
+                  )}
+                >
+                  <span className={cn('text-[0.625rem]', active ? 'text-draft' : 'text-ink-faint/60')}>
+                    {`0${i + 1}`}
+                  </span>
+                  {link.label}
+                </button>
+              )
+            })}
           </nav>
 
           <div className="hidden md:flex">
@@ -87,7 +87,7 @@ export default function Navbar() {
           </div>
 
           <button
-            className="flex items-center justify-center rounded-lg p-2 text-slate-400 hover:text-white md:hidden"
+            className="flex items-center justify-center p-2 text-ink-soft hover:text-ink md:hidden"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -103,19 +103,20 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-16 z-40 border-b border-white/[0.06] bg-[#080808]/95 px-6 py-4 backdrop-blur-xl md:hidden"
+            className="fixed inset-x-0 top-16 z-40 border-b border-line bg-paper/97 px-6 py-4 backdrop-blur-md md:hidden"
           >
-            <nav className="flex flex-col gap-4">
-              {NAV_LINKS.map((link) => (
+            <nav className="flex flex-col gap-1">
+              {NAV_LINKS.map((link, i) => (
                 <button
                   key={link.href}
                   onClick={() => handleNavClick(link.href)}
-                  className="py-1 text-left text-sm text-slate-300 hover:text-white"
+                  className="flex items-center gap-2 py-2 text-left font-mono text-sm uppercase tracking-wider text-ink-soft hover:text-ink"
                 >
+                  <span className="text-[0.625rem] text-draft">{`0${i + 1}`}</span>
                   {link.label}
                 </button>
               ))}
-              <Button href={`mailto:${SITE.email}`} size="sm" className="mt-2 w-full">
+              <Button href={`mailto:${SITE.email}`} size="sm" className="mt-3 w-full">
                 Hire me
               </Button>
             </nav>

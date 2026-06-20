@@ -1,21 +1,55 @@
 @import "tailwindcss";
 
+/* ============================================================
+   BLUEPRINT / SCHEMATIC DESIGN SYSTEM
+   A draftsman's drawing of a full-stack engineer.
+   Vellum paper · navy drawing ink · dimension blue · revision red
+   ============================================================ */
+
 :root {
-  --bg: #080808;
-  --bg-card: #111118;
-  --bg-surface: #1a1a26;
-  --accent: #8B5CF6;
-  --accent-mint: #06D6A0;
-  --text-primary: #F8FAFC;
-  --text-muted: #94A3B8;
-  --border: rgba(255, 255, 255, 0.07);
+  /* Surface — drafting vellum, deliberately cool grey-green (not warm cream) */
+  --paper: #e7e9e1;
+  --paper-2: #eef0e9;
+  --paper-sunk: #dfe2d9;
+
+  /* Drawing ink */
+  --ink: #15263b;
+  --ink-soft: #3c4d61;
+  --ink-faint: rgba(21, 38, 59, 0.55);
+
+  /* Dimension / annotation blue */
+  --dim: #2e5a88;
+
+  /* Revision / callout red */
+  --draft: #ce3b2a;
+
+  /* Graph-paper grid */
+  --grid: rgba(21, 38, 59, 0.06);
+  --grid-major: rgba(21, 38, 59, 0.11);
+
+  /* Lines & borders */
+  --line: rgba(21, 38, 59, 0.16);
+  --line-strong: rgba(21, 38, 59, 0.3);
 }
 
 @theme inline {
-  --color-background: var(--bg);
-  --color-foreground: var(--text-primary);
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Syne', sans-serif;
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-paper-sunk: var(--paper-sunk);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-dim: var(--dim);
+  --color-draft: var(--draft);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --font-display: var(--ff-display);
+  --font-sans: var(--ff-body);
+  --font-mono: var(--ff-mono);
 }
 
 * {
@@ -27,85 +61,224 @@ html {
 }
 
 body {
-  background: var(--bg);
-  color: var(--text-primary);
-  font-family: 'Inter', sans-serif;
+  background-color: var(--paper);
+  /* Engineering graph paper: fine grid + denser feel via two layers */
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 26px 26px;
+  background-position: -1px -1px;
+  color: var(--ink);
+  font-family: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
+  overflow-y: auto;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: rgba(139, 92, 246, 0.35);
-  color: #fff;
+  background: rgba(206, 59, 42, 0.22);
+  color: var(--ink);
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 10px;
 }
-
 ::-webkit-scrollbar-track {
-  background: var(--bg);
+  background: var(--paper-sunk);
 }
-
 ::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.4);
-  border-radius: 2px;
+  background: var(--ink);
+  border: 3px solid var(--paper-sunk);
+  border-radius: 0;
 }
 
+/* ---- Type roles ---- */
 .font-display {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--ff-display), sans-serif;
+  letter-spacing: -0.02em;
+}
+.font-mono {
+  font-family: var(--ff-mono), ui-monospace, monospace;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #8B5CF6 0%, #06D6A0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* The "technical voice" — mono, tracked, uppercase. Used for labels,
+   figure refs, dimensions, eyebrows. A real drafting annotation style. */
+.tech-label {
+  font-family: var(--ff-mono), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
 }
 
-.card-glow {
-  box-shadow: 0 0 0 0.5px rgba(139, 92, 246, 0.2), 0 8px 32px rgba(139, 92, 246, 0.06);
+.tabular {
+  font-variant-numeric: tabular-nums;
 }
 
-.mint-glow {
-  box-shadow: 0 0 0 0.5px rgba(6, 214, 160, 0.2), 0 8px 32px rgba(6, 214, 160, 0.06);
-}
-
+/* ---- Layout rhythm ---- */
 .section-padding {
-  padding: 7rem 0;
+  padding: 7.5rem 0;
 }
-
 @media (max-width: 768px) {
   .section-padding {
-    padding: 4rem 0;
+    padding: 4.5rem 0;
   }
 }
 
-/* Orbital animation — wrapper rotates, inner counter-rotates to keep text upright */
-@keyframes orbit-cw {
-  from { transform: rotate(var(--orbit-start)) translateX(var(--orbit-r)) rotate(calc(-1 * var(--orbit-start))); }
-  to   { transform: rotate(calc(var(--orbit-start) + 360deg)) translateX(var(--orbit-r)) rotate(calc(-1 * (var(--orbit-start) + 360deg))); }
-}
+/* ---- Drafting flourishes ---- */
 
-@keyframes orbit-ccw {
-  from { transform: rotate(var(--orbit-start)) translateX(var(--orbit-r)) rotate(calc(-1 * var(--orbit-start))); }
-  to   { transform: rotate(calc(var(--orbit-start) - 360deg)) translateX(var(--orbit-r)) rotate(calc(-1 * (var(--orbit-start) - 360deg))); }
+/* Corner tick marks used on framed schematic boxes */
+.tick-corners {
+  position: relative;
 }
-
-.orbit-badge {
+.tick-corners::before,
+.tick-corners::after {
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -16px;
-  margin-left: -32px;
-  animation: orbit-cw var(--orbit-duration, 12s) linear infinite;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--line-strong);
+}
+.tick-corners::before {
+  top: -1px;
+  left: -1px;
+  border-right: 0;
+  border-bottom: 0;
+}
+.tick-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: 0;
+  border-top: 0;
 }
 
-.orbit-badge-ccw {
+/* Schematic surface card */
+.sheet {
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 26px 26px,
+    var(--paper-2);
+  border: 1px solid var(--line);
+}
+
+/* A dashed leader / annotation line color helper */
+.leader {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+/* Crosshair register mark */
+.register::before,
+.register::after {
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -16px;
-  margin-left: -32px;
-  animation: orbit-ccw var(--orbit-duration, 15s) linear infinite;
+  background: var(--line-strong);
+}
+
+/* ============================================================
+   CYANOTYPE NEGATIVE PRINT
+   Authentic blueprint reproduction: white lines on deep blue.
+   Overriding the raw vars cascades to every text-ink / bg-paper /
+   border-line / fill-ink utility, so children invert automatically.
+   ============================================================ */
+.print-negative {
+  --paper: #0c1a2b;
+  --paper-2: #0f2236;
+  --paper-sunk: #0a1521;
+  --ink: #eaf1f8;
+  --ink-soft: #a6bdd4;
+  --ink-faint: rgba(234, 241, 248, 0.5);
+  --dim: #5fb2ea;
+  --line: rgba(120, 175, 225, 0.18);
+  --line-strong: rgba(120, 175, 225, 0.34);
+  --grid: rgba(120, 175, 225, 0.07);
+  --grid-major: rgba(120, 175, 225, 0.12);
+
+  position: relative;
+  color: var(--ink);
+  background-color: #0a1726;
+  background-image:
+    radial-gradient(120% 90% at 50% -10%, rgba(95, 178, 234, 0.12), transparent 55%),
+    radial-gradient(80% 60% at 100% 100%, rgba(206, 59, 42, 0.07), transparent 60%),
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: auto, auto, 26px 26px, 26px 26px;
+}
+/* blend the dark band into the surrounding vellum */
+.print-negative::before,
+.print-negative::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 56px;
+  pointer-events: none;
+  z-index: 1;
+}
+.print-negative::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--paper-page, #e7e9e1), transparent);
+}
+.print-negative::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--paper-page, #e7e9e1), transparent);
+}
+/* opt out of the bottom fade (e.g. footer at page end) */
+.print-negative.no-fade-b::after {
+  display: none;
+}
+/* Safari: pseudo-elements with z-index:1 paint above non-positioned children.
+   Promote all direct content children so they stack above the gradient overlays. */
+.print-negative > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ---- gradient washes for depth ---- */
+.glow-dim {
+  background: radial-gradient(closest-side, rgba(46, 90, 136, 0.18), transparent);
+}
+.glow-draft {
+  background: radial-gradient(closest-side, rgba(206, 59, 42, 0.14), transparent);
+}
+.text-gradient {
+  background: linear-gradient(115deg, var(--ink) 30%, var(--dim) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* hairline gradient top edge for cards */
+.edge-gradient {
+  background-image: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
+/* ---- ambient drafting animations ---- */
+@keyframes scan-sweep {
+  0% { transform: translateX(-120%); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(120%); opacity: 0; }
+}
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes dash-flow {
+  to { stroke-dashoffset: -1000; }
+}
+.dash-flow {
+  stroke-dasharray: 6 8;
+  animation: dash-flow 24s linear infinite;
+}
+
+/* prefers-reduced-motion: kill ambient loops */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

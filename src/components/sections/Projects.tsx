@@ -3,177 +3,172 @@ import { motion } from 'framer-motion'
 import { ExternalLink, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { GitHubIcon } from '@/components/ui/SocialIcons'
-import SectionHeader from '@/components/ui/SectionHeader'
+import FigureLabel from '@/components/blueprint/FigureLabel'
+import ProjectThumb from '@/components/blueprint/ProjectThumb'
 import Badge from '@/components/ui/Badge'
 import { projects } from '@/data/projects'
 import { EASE_OUT } from '@/lib/motion'
 
+const accent = (color: 'violet' | 'mint') => (color === 'violet' ? 'text-dim' : 'text-draft')
+const thumbAccent = (color: 'violet' | 'mint') => (color === 'violet' ? 'dim' : 'draft')
+
 export default function Projects() {
+  const featured = projects.filter((p) => p.featured)
+  const rest = projects.filter((p) => !p.featured)
+
   return (
-    <section id="projects" className="section-padding px-6">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <SectionHeader
-            index="03 — PROJECTS"
-            title="Selected Work"
-            subtitle="A few things I've built recently."
+    <section id="projects" className="relative overflow-hidden section-padding px-6">
+      <div className="glow-draft pointer-events-none absolute -left-32 top-1/3 h-[420px] w-[420px]" />
+      <div className="relative mx-auto max-w-6xl">
+        <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <FigureLabel
+            fig="03"
+            label="PROJECTS"
+            title="Selected drawings"
+            subtitle="A few systems I've built end to end — preview plates below."
           />
           <motion.a
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            href="https://github.com/ferdousazad"
+            href="https://github.com/azad25"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex shrink-0 items-center gap-1.5 text-sm text-slate-400 transition-colors hover:text-white"
+            className="flex shrink-0 items-center gap-1.5 font-mono text-xs uppercase tracking-wider text-ink-soft transition-colors hover:text-ink"
           >
-            <GitHubIcon size={15} />
-            View all on GitHub
+            <GitHubIcon size={14} />
+            Full archive →
           </motion.a>
         </div>
 
-        {/* Featured projects — 2 col */}
-        <div className="mb-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
-          {projects.filter((p) => p.featured).map((project, i) => (
+        {/* Featured plates */}
+        <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {featured.map((project, i) => (
             <motion.article
               key={project.id}
-              initial={{ opacity: 0, y: 32 }}
+              initial={{ opacity: 0, y: 28 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, ease: EASE_OUT, delay: i * 0.12 }}
-              className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 transition-colors duration-300 hover:border-white/[0.12] hover:bg-white/[0.04]"
+              transition={{ duration: 0.6, ease: EASE_OUT, delay: i * 0.1 }}
+              className="tick-corners sheet group relative flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_rgba(21,38,59,0.12)]"
             >
-              {/* Accent glow */}
               <div
-                className={`pointer-events-none absolute -top-24 right-0 h-48 w-48 rounded-full blur-3xl transition-opacity duration-500 group-hover:opacity-100 opacity-0 ${
-                  project.color === 'violet' ? 'bg-violet-600/20' : 'bg-emerald-400/15'
+                className={`pointer-events-none absolute -top-16 right-0 h-40 w-40 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100 ${
+                  project.color === 'violet' ? 'bg-dim/25' : 'bg-draft/20'
                 }`}
               />
 
-              {/* Top row — icon + external links */}
-              <div className="mb-5 flex items-start justify-between gap-4">
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-lg text-lg font-bold ${
-                    project.color === 'violet'
-                      ? 'bg-violet-500/15 text-violet-400'
-                      : 'bg-emerald-400/10 text-emerald-400'
-                  }`}
-                >
-                  {project.color === 'violet' ? '<>' : '[ ]'}
-                </div>
-                <div className="flex items-center gap-3">
-                  {project.githubUrl && (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-slate-500 transition-colors hover:text-white"
-                      aria-label="GitHub repository"
-                    >
-                      <GitHubIcon size={17} />
-                    </a>
-                  )}
-                  {project.liveUrl && project.liveUrl !== '#' && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-slate-500 transition-colors hover:text-white"
-                      aria-label="Live site"
-                    >
-                      <ExternalLink size={17} />
-                    </a>
-                  )}
-                </div>
+              {/* preview plate */}
+              <div className="relative overflow-hidden border-b border-line">
+                <ProjectThumb
+                  variant={projects.indexOf(project)}
+                  accent={thumbAccent(project.color)}
+                  className="transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+                <span className="absolute left-3 top-3 border border-line-strong bg-paper/85 px-2 py-0.5 font-mono text-[0.625rem] font-semibold uppercase tracking-[0.12em] backdrop-blur-sm">
+                  <span className={accent(project.color)}>PLATE {(i + 1).toString().padStart(2, '0')}</span>
+                </span>
               </div>
 
-              {/* Content */}
-              <Link href={`/projects/${project.id}`} className="group/title mb-2 block">
-                <h3 className="text-lg font-semibold text-white transition-colors group-hover/title:text-slate-300">
-                  {project.title}
-                </h3>
-              </Link>
-              <p className="mb-5 flex-1 text-sm leading-relaxed text-slate-400">{project.longDescription}</p>
-
-              {/* Tags + detail link */}
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <Badge key={tag} variant={project.color === 'violet' ? 'violet' : 'mint'}>
-                      {tag}
-                    </Badge>
-                  ))}
+              <div className="relative flex flex-1 flex-col p-6">
+                <div className="mb-3 flex items-start justify-between gap-4">
+                  <Link href={`/projects/${project.id}`}>
+                    <h3 className="font-display text-xl font-semibold text-ink transition-colors group-hover:text-dim">
+                      {project.title}
+                    </h3>
+                  </Link>
+                  <div className="mt-1 flex items-center gap-3 text-ink-faint">
+                    {project.githubUrl && (
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-ink" aria-label="GitHub repository">
+                        <GitHubIcon size={16} />
+                      </a>
+                    )}
+                    {project.liveUrl && project.liveUrl !== '#' && (
+                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-ink" aria-label="Live site">
+                        <ExternalLink size={16} />
+                      </a>
+                    )}
+                  </div>
                 </div>
-                <Link
-                  href={`/projects/${project.id}`}
-                  className={`flex items-center gap-1 text-xs font-medium transition-colors ${
-                    project.color === 'violet'
-                      ? 'text-violet-400/70 hover:text-violet-300'
-                      : 'text-emerald-400/70 hover:text-emerald-300'
-                  }`}
-                >
-                  Details <ArrowUpRight size={13} />
-                </Link>
+
+                <p className="mb-5 flex-1 text-sm leading-relaxed text-ink-soft">{project.longDescription}</p>
+
+                <span className="mb-4 h-px w-full bg-line" />
+
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.tags.slice(0, 4).map((tag) => (
+                      <Badge key={tag} variant={project.color}>
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className={`flex items-center gap-1 font-mono text-[0.6875rem] uppercase tracking-wider transition-colors ${accent(project.color)} hover:text-ink`}
+                  >
+                    Detail <ArrowUpRight size={13} />
+                  </Link>
+                </div>
               </div>
             </motion.article>
           ))}
         </div>
 
-        {/* Other projects — 2 col smaller */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {projects.filter((p) => !p.featured).map((project, i) => (
+        {/* Secondary plates */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {rest.map((project, i) => (
             <motion.article
               key={project.id}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.5, ease: EASE_OUT, delay: i * 0.1 }}
-              className="group rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5 transition-colors duration-300 hover:border-white/[0.12] hover:bg-white/[0.04]"
+              className="sheet group flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-[5px_5px_0_rgba(21,38,59,0.1)]"
             >
-              <div className="mb-4 flex items-start justify-between">
-                <Link href={`/projects/${project.id}`} className="group/title">
-                  <h3 className="font-semibold text-white transition-colors group-hover/title:text-slate-300">
-                    {project.title}
-                  </h3>
-                </Link>
-                <div className="flex items-center gap-3">
-                  {project.githubUrl && (
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-slate-500 transition-colors hover:text-white"
-                    >
-                      <GitHubIcon size={16} />
-                    </a>
-                  )}
-                  {project.liveUrl && project.liveUrl !== '#' && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-slate-500 transition-colors hover:text-white"
-                    >
-                      <ExternalLink size={16} />
-                    </a>
-                  )}
-                </div>
+              <div className="overflow-hidden border-b border-line">
+                <ProjectThumb
+                  variant={projects.indexOf(project)}
+                  accent={thumbAccent(project.color)}
+                  className="transition-transform duration-500 group-hover:scale-[1.03]"
+                />
               </div>
-              <p className="mb-4 text-sm leading-relaxed text-slate-400">{project.description}</p>
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-1.5">
-                  {project.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="neutral">
-                      {tag}
-                    </Badge>
-                  ))}
+              <div className="flex flex-1 flex-col p-5">
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <Link href={`/projects/${project.id}`}>
+                    <h3 className="font-display font-semibold text-ink transition-colors group-hover:text-dim">
+                      {project.title}
+                    </h3>
+                  </Link>
+                  <div className="mt-0.5 flex items-center gap-3 text-ink-faint">
+                    {project.githubUrl && (
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-ink" aria-label="GitHub repository">
+                        <GitHubIcon size={15} />
+                      </a>
+                    )}
+                    {project.liveUrl && project.liveUrl !== '#' && (
+                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-ink" aria-label="Live site">
+                        <ExternalLink size={15} />
+                      </a>
+                    )}
+                  </div>
                 </div>
-                <Link
-                  href={`/projects/${project.id}`}
-                  className="flex shrink-0 items-center gap-1 text-xs text-slate-500 transition-colors hover:text-white"
-                >
-                  Details <ArrowUpRight size={13} />
-                </Link>
+                <p className="mb-4 flex-1 text-sm leading-relaxed text-ink-soft">{project.description}</p>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex flex-wrap gap-1.5">
+                    {project.tags.slice(0, 3).map((tag) => (
+                      <Badge key={tag} variant="neutral">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className="flex shrink-0 items-center gap-1 font-mono text-[0.6875rem] uppercase tracking-wider text-ink-faint transition-colors hover:text-ink"
+                  >
+                    Detail <ArrowUpRight size={13} />
+                  </Link>
+                </div>
               </div>
             </motion.article>
           ))}

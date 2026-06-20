@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Send, CheckCircle } from 'lucide-react'
 import { GitHubIcon, LinkedInIcon, XIcon } from '@/components/ui/SocialIcons'
-import SectionHeader from '@/components/ui/SectionHeader'
+import FigureLabel from '@/components/blueprint/FigureLabel'
 import Button from '@/components/ui/Button'
 import { SITE } from '@/lib/constants'
 import { EASE_OUT } from '@/lib/motion'
@@ -37,28 +37,26 @@ export default function Contact() {
   }
 
   const inputClass =
-    'w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-violet-500/50 focus:bg-white/[0.05]'
+    'w-full border border-line bg-paper px-3.5 py-2.5 text-sm text-ink placeholder-ink-faint outline-none transition-colors focus:border-dim'
+  const labelClass = 'mb-1.5 block font-mono text-[0.625rem] uppercase tracking-[0.15em] text-ink-faint'
 
   return (
-    <section id="contact" className="section-padding px-6">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
+    <section id="contact" className="relative overflow-hidden section-padding px-6">
+      <div className="glow-dim pointer-events-none absolute -right-24 bottom-0 h-[440px] w-[440px]" />
+      <div className="relative mx-auto max-w-6xl">
+        <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
           {/* Left */}
           <div>
-            <SectionHeader
-              index="05 — CONTACT"
-              title="Let's build something"
-              className="mb-6"
-            />
+            <FigureLabel fig="05" label="CONTACT" title="Request for build" className="mb-6" />
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.1 }}
-              className="mb-8 max-w-sm leading-relaxed text-slate-400"
+              className="mb-8 max-w-sm leading-relaxed text-ink-soft"
             >
-              Open to remote full stack roles, freelance projects, and interesting
-              collaborations. Drop me a message or reach out directly.
+              Open to remote full-stack roles, freelance builds, and interesting
+              collaborations. File a request below or reach out directly.
             </motion.p>
 
             <motion.a
@@ -67,7 +65,7 @@ export default function Contact() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.2 }}
               href={`mailto:${SITE.email}`}
-              className="mb-10 block text-base font-medium text-white transition-colors hover:text-violet-400"
+              className="mb-10 inline-block border-b border-line-strong pb-1 font-mono text-base text-ink transition-colors hover:border-draft hover:text-draft"
             >
               {SITE.email}
             </motion.a>
@@ -77,7 +75,7 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.3 }}
-              className="flex items-center gap-4"
+              className="flex flex-wrap items-center gap-3"
             >
               {[
                 { href: SITE.github, Icon: GitHubIcon, label: 'GitHub' },
@@ -90,9 +88,9 @@ export default function Contact() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex items-center gap-2 rounded-lg border border-white/[0.08] px-4 py-2.5 text-sm text-slate-400 transition-all hover:border-white/20 hover:text-white"
+                  className="flex items-center gap-2 border border-line bg-paper-2/50 px-3.5 py-2 font-mono text-xs uppercase tracking-wider text-ink-soft transition-all hover:border-ink hover:text-ink"
                 >
-                  <Icon size={16} />
+                  <Icon size={15} />
                   {label}
                 </a>
               ))}
@@ -101,90 +99,56 @@ export default function Contact() {
 
           {/* Right — form */}
           <motion.div
-            initial={{ opacity: 0, y: 32 }}
+            initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.1 }}
+            className="tick-corners sheet p-6"
           >
             {status === 'sent' ? (
-              <div className="flex flex-col items-center justify-center rounded-2xl border border-emerald-400/20 bg-emerald-400/5 py-16 text-center">
-                <CheckCircle className="mb-4 h-12 w-12 text-emerald-400" />
-                <p className="text-lg font-semibold text-white">Message sent!</p>
-                <p className="mt-2 text-sm text-slate-400">I&apos;ll get back to you within 24 hours.</p>
+              <div className="flex flex-col items-center justify-center py-14 text-center">
+                <CheckCircle className="mb-4 h-11 w-11 text-dim" />
+                <p className="font-display text-lg font-semibold text-ink">Request filed.</p>
+                <p className="mt-2 text-sm text-ink-soft">I&apos;ll respond within 24 hours.</p>
                 <button
                   onClick={() => setStatus('idle')}
-                  className="mt-6 text-sm text-violet-400 underline-offset-4 hover:underline"
+                  className="mt-6 font-mono text-xs uppercase tracking-wider text-draft underline-offset-4 hover:underline"
                 >
-                  Send another
+                  File another
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-xs text-slate-500">Name</label>
-                    <input
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your name"
-                      className={inputClass}
-                    />
+                    <label className={labelClass}>Name</label>
+                    <input name="name" value={form.name} onChange={handleChange} required placeholder="Your name" className={inputClass} />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs text-slate-500">Email</label>
-                    <input
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="you@company.com"
-                      className={inputClass}
-                    />
+                    <label className={labelClass}>Email</label>
+                    <input name="email" type="email" value={form.email} onChange={handleChange} required placeholder="you@company.com" className={inputClass} />
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs text-slate-500">Subject</label>
-                  <input
-                    name="subject"
-                    value={form.subject}
-                    onChange={handleChange}
-                    required
-                    placeholder="What's this about?"
-                    className={inputClass}
-                  />
+                  <label className={labelClass}>Subject</label>
+                  <input name="subject" value={form.subject} onChange={handleChange} required placeholder="What's this about?" className={inputClass} />
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs text-slate-500">Message</label>
-                  <textarea
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                    required
-                    rows={5}
-                    placeholder="Tell me about the role or project..."
-                    className={`${inputClass} resize-none`}
-                  />
+                  <label className={labelClass}>Brief</label>
+                  <textarea name="message" value={form.message} onChange={handleChange} required rows={5} placeholder="Tell me about the role or project…" className={`${inputClass} resize-none`} />
                 </div>
 
                 {status === 'error' && (
-                  <p className="text-sm text-red-400">
-                    Something went wrong. Please email me directly.
+                  <p className="font-mono text-xs text-draft">
+                    Transmission failed — please email me directly.
                   </p>
                 )}
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full"
-                  disabled={status === 'sending'}
-                >
-                  {status === 'sending' ? 'Sending…' : (
+                <Button type="submit" variant="accent" size="lg" className="w-full" disabled={status === 'sending'}>
+                  {status === 'sending' ? 'Transmitting…' : (
                     <>
-                      Send message
-                      <Send size={15} />
+                      Submit request
+                      <Send size={14} />
                     </>
                   )}
                 </Button>
